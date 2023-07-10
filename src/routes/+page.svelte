@@ -1,13 +1,27 @@
-<!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
+<script lang="ts">
+  import { invoke } from "@tauri-apps/api/tauri";
 
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-5">
-		<h1 class="h1">Let's get cracking bones!</h1>
-		<p>Start by exploring:</p>
-		<ul>
-			<li><code class="code">/src/routes/+layout.svelte</code> - barebones layout, the CSS import order is critical!</li>
-			<li><code class="code">/src/app.postcss</code> - minimal css to make the page full screen, may not be relevant for your project</li>
-			<li><code class="code">/src/routes/+page.svelte</code> - this page, you can replace the contents</li>
-		</ul>
-	</div>
+  let output: string;
+  let source: string;
+
+  async function run(input: string) {
+    output = await invoke("run", { input })
+  }
+</script>
+
+<h1 class="h1 text-center mt-8">Python editor</h1>
+
+<div class="w-96 h-96 mx-auto mt-8">
+  <textarea class="textarea w-full h-full resize-none" bind:value={source}></textarea>
+
+  <button
+    on:click={() => run(source)}
+    disabled={source === undefined}
+    class="btn variant-filled-primary w-full mt-4">
+    Run code!
+  </button>
+  
+  {#if output}
+	<pre class="pre mt-4">{output}</pre>
+  {/if}
 </div>
